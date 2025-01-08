@@ -1,6 +1,6 @@
 import "./App.css";
 import Form from "./components/Form";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface Task {
   id: number;
@@ -13,6 +13,19 @@ interface Task {
 const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editTask, setEditTask] = useState<Task | null>(null);
+
+  // Load tasks from local storage when the component mounts
+  useEffect(() => {
+    const savedTasks = localStorage.getItem("tasks");
+    if (savedTasks) {
+      setTasks(JSON.parse(savedTasks));
+    }
+  }, []);
+
+  // Save tasks to local storage whenever the tasks array changes
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   const handleTaskSubmit = (
     title: string,
